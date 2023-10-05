@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+Future<bool> checkForUpdates() async {
+  return false;
+}
+
+void showUpdateNotification(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Update Available'),
+        content: Text('A new version of the app is available.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text('Later'),
+          ),
+          TextButton(
+            onPressed: () {
+              launchUpdateURL(); // Open the app's update page
+            },
+            child: Text('Update Now'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void launchUpdateURL() async {
+  const url = 'https://play.google.com/store/apps/details?id=com.nminfotech.bneedsoutletgst';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
