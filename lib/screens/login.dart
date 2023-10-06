@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants/variables.dart';
 import '../style/Colors.dart';
 import 'package:logger/logger.dart' as logger;
 
@@ -62,12 +63,20 @@ class _LoginState extends State<Login> {
                 Map<String, dynamic> userData = data.first;
                 String username = userData['Username'];
                 String password = userData['Password'];
+                String companyname = userData['companyname'];
+                String companyid = userData['companyid'];
                 // Store values in shared preferences
                 log.w('Username: $username Password: $password');
                 SharedPreferences loginprefs = await SharedPreferences.getInstance();
                 await loginprefs.setString('username', username);
                 await loginprefs.setString('password', password);
-               
+                await loginprefs.setString('companyid', companyid);
+                await loginprefs.setString('companyname', companyname);
+
+                 Prefsusername = (await loginprefs.getString('username'))!;
+                 Prefspassword = (await loginprefs.getString('password'))!;
+                 Prefscompanyname = (await loginprefs.getString('companyname'))!;
+                 Prefscompanyid = (await loginprefs.getString('companyid'))!;
 
                 Navigator.push(
                   context,

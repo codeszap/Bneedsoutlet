@@ -28,6 +28,7 @@ class _AccmastState extends State<Accmast> {
 
   
   late Future<List<Company>> _futureCompanies;
+
   late DatabaseConnection databaseHelper;
   String? _selectedValue;
   String itemID = '';
@@ -601,7 +602,6 @@ Future<void> fetchDataAndInsertIntoSQLite(DatabaseConnection databaseHelper) asy
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData && snapshot.data != null) {
-                  // If data is available, build the dropdown
                   List<Company> companies = snapshot.data!;
                   if (_selectedValue == null && companies.isNotEmpty) {
                     _selectedValue = companies.first.companyid;

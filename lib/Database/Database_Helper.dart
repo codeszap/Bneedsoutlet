@@ -1,11 +1,13 @@
 import 'dart:math';
 
+import 'package:bneedsoutlet/Modal/ModalSalesReport.dart';
 import 'package:bneedsoutlet/Modal/accmast_balance_modal.dart';
 import 'package:bneedsoutlet/Modal/ledger_balance_modal.dart';
 import 'package:bneedsoutlet/Modal/TransactionModal.dart';
 import 'package:bneedsoutlet/Modal/sales_data_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../Modal/item_data_modal.dart';
@@ -143,7 +145,7 @@ class DatabaseConnection {
           Qty TEXT,
           Selrate TEXT,
           Amount TEXT,
-          Companyid TEXT,
+          Companyid TEXT, 
           userid TEXT,
           DiscPer TEXT,
           Discount TEXT,
@@ -856,14 +858,78 @@ Future<List<AccmastBalanceModal>> getAccmastCustName({String? companyId}) async 
   }
 }
 
-  Future<void> insertSalesEntryData(Map<String, dynamic> data) async {
+  Future<void> insertSalesEntryData(List<Map<String, dynamic>> dataList) async {
     final db = await setDatabase();
+        DateTime now = DateTime.now();
+        String CurrentDate = DateFormat('dd-MM-yyyy').format(now);
     try {
-      await db.insert('SalesEntry', data);
+      for (final data in dataList) {
+        final cartItems = data['cartItems'];
+        for (final item in cartItems) {
+          await db.insert('SalesEntry', {
+            'Entrefno': data['billno'],
+            'BillNo': data['billno'],
+            'Billdate': CurrentDate,
+            'Accode': data['accode'],
+            'itemid': item['itemId'],
+            'Qty': item['qty'],
+            'Selrate': item['selRate'],
+            'Amount': item['amount'],
+            'Companyid': data['companyid'],
+            'userid': data['companyid'],
+            'DiscPer': item['disval'],
+            'Discount': item['disval'],
+            'gst': item['gst'],
+            'gstval': item['gstval'],
+            'BILLPREFIX': data['billPre'],
+            'selratenotax': item['SelRateTax'],
+            'taxtype': item['TaxType'],
+          });
+        }
+      }
       logger.i('Data inserted into SalesEntry table successfully');
     } catch (e) {
       logger.i('Error inserting data into SalesEntry table: $e');
     }
   }
 
+  Future<List<ModalSalesReport>> getSalesReport({String? companyId}) async {
+    try {
+      final dbClient = await db;
+      if (dbClient == null) {
+        logger.i('Database is null. Make sure to call setDatabase() first.');
+        return [];
+      }
+      String whereClause = companyId != null ? 'Companyid = ?' : '1';
+      List<dynamic> whereArgs = companyId != null ? [companyId] : [];
+      final List<Map<String, dynamic>> maps = await dbClient.query('SalesEntry',
+          where: whereClause, whereArgs: whereArgs);
+
+      return List.generate(maps.length, (i) {
+        return ModalSalesReport(
+          Entrefno: maps[i]['Entrefno'] ?? '',
+          BillNo: maps[i]['BillNo'] ?? '',
+          Billdate: maps[i]['Billdate'] ?? '',
+          Accode: maps[i]['Accode'] ?? '',
+          itemid: maps[i]['itemid'] ?? '',
+          Qty: maps[i]['Qty'] ?? '',
+          Selrate: maps[i]['Selrate'] ?? '',
+          Amount: maps[i]['Amount'] ?? '',
+          Companyid: maps[i]['Companyid'] ?? '',
+          userid: maps[i]['userid'] ?? '',
+          DiscPer: maps[i]['DiscPer'] ?? '',
+          Discount: maps[i]['Discount'] ?? '',
+          gst: maps[i]['gst'] ?? '',
+          gstval: maps[i]['gstval'] ?? '',
+          BILLPREFIX: maps[i]['BILLPREFIX'] ?? '',
+          selratenotax: maps[i]['selratenotax'] ?? '',
+          taxtype: maps[i]['taxtype'] ?? '',
+        );
+
+      });
+    } catch (e) {
+      logger.i('Error fetching Accmast items: $e');
+      return [];
+    }
+  }
 }

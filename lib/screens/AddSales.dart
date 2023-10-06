@@ -413,7 +413,9 @@ class _AddSalesState extends State<AddSales> {
                               'CompanyId', widget.selectedCompany);
 
                           PrintAddToCart(requestBody);
-
+                          DatabaseConnection databaseConnection =
+                          DatabaseConnection();
+                          await databaseConnection.insertSalesEntryData([requestBody]);
                           /*  RequestHandler requestHandler = RequestHandler(requestBody);
                             requestHandler.handleRequest();*/
 
@@ -436,8 +438,8 @@ class _AddSalesState extends State<AddSales> {
                                     msg: "Insert Successfully");
                                 DatabaseConnection databaseConnection =
                                     DatabaseConnection();
-                                await databaseConnection
-                                    .insertSalesEntryData(requestBody);
+                               /* await databaseConnection
+                                    .insertSalesEntryData(requestBody);*/
                                 SharedPreferences PrintModePrefs =
                                     await SharedPreferences.getInstance();
                                 PrintModePrefs.setString(

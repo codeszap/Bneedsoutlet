@@ -13,6 +13,7 @@ import 'package:bneedsoutlet/screens/_AccMast.dart';
 import 'package:bneedsoutlet/screens/backup_database.dart';
 import 'package:bneedsoutlet/screens/login.dart';
 import 'package:bneedsoutlet/screens/salesEntry.dart';
+import 'package:bneedsoutlet/screens/sales_report.dart';
 import 'package:bneedsoutlet/screens/show_printer.dart';
 import 'package:bneedsoutlet/style/Colors.dart';
 import 'package:flutter/material.dart';
@@ -126,6 +127,7 @@ class MyApp extends StatelessWidget {
         '/BackupData': (context) => const BackupData(),
         '/GenerateDatabaseState': (context) => const GenerateDatabase(),
         '/showprinter': (context) => const ShowPrinter(),
+        '/salesreport': (context) => const sales_report(),
       },
     );
   }

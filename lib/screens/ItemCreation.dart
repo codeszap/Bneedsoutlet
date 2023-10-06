@@ -732,7 +732,6 @@ class _ItemCreationState extends State<ItemCreation> {
                 
                 try {
                   _addItemApi(itemID,newItemName,newselRate,newmrp,newCgst,newselRate,newpurRate,newCommCode,companyid,lok);
-                  
                   commcodeController.text="";
                   selRateController.text="";
                   fetchDataAndInsertIntoSQLite(databaseHelper);

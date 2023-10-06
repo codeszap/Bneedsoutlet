@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 class Company {
   final String companyid;
 
-  const Company({
+     Company({
     required this.companyid,
   });
 
@@ -18,6 +18,8 @@ class Company {
     );
   }
 }
+
+
 Future<List<Company>> fetchAlbums(BuildContext context) async {
   try {
     SharedPreferences loginprefs = await SharedPreferences.getInstance();
